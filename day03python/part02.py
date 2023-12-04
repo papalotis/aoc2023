@@ -48,10 +48,7 @@ def calc_indices_of_numbers_adjacent_to_gears(
     numbers_start_end_xys: list[list[tuple[int, int]]],
     gear_idxs: list[tuple[int, int]],
 ) -> IntArray:
-    numbers_start_end_xys = [
-        [first, last]
-        for first, *_, last in numbers_start_end_xys
-    ]
+    numbers_start_end_xys = [[first, last] for first, *_, last in numbers_start_end_xys]
 
     numbers_array = np.array(numbers_start_end_xys)
     specials_array = np.array(gear_idxs)

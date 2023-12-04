@@ -60,10 +60,7 @@ def mask_numbers_adjacent_to_special_character(
     numbers_start_end_xys: list[list[tuple[int, int]]],
     special_idxs: list[tuple[int, int]],
 ) -> NDArray[np.bool_]:
-    numbers_start_end_xys = [
-        [first, last]
-        for first, *_, last in numbers_start_end_xys
-    ]
+    numbers_start_end_xys = [[first, last] for first, *_, last in numbers_start_end_xys]
 
     numbers_array = np.array(numbers_start_end_xys)
     specials_array = np.array(special_idxs)
