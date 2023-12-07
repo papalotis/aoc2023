@@ -54,5 +54,5 @@ if __name__ == "__main__":
     try:
         fname, *_ = sys.argv[1:]
     except ValueError:
-        fname = str(Path(__file__).absolute().parent / "example_data.txt")
+        fname = str(Path(__file__).with_name("example_data.txt"))
     main(fname)

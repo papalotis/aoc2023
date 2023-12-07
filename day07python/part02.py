@@ -60,6 +60,11 @@ def best_hand_key(hand: HandType) -> tuple[int, list[int], HandType]:
 
     valid_values = set(range(2, 15)) - {JOKER_VALUE}
 
+    if JOKER_VALUE not in hand:
+        # no jokers, just return the hand key
+        # the second argument is irrelevant
+        return hand_key(hand, JOKER_VALUE)
+
     return max(hand_key(hand, value) for value in valid_values)
 
 
@@ -75,5 +80,5 @@ if __name__ == "__main__":
     try:
         fname, *_ = sys.argv[1:]
     except ValueError:
-        fname = str(Path(__file__).absolute().parent / "example_data.txt")
+        fname = str(Path(__file__).with_name("example_data.txt"))
     main(fname)
