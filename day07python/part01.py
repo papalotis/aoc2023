@@ -28,44 +28,16 @@ def parse(data: str) -> list[tuple[HandType, int]]:
     return list(map(parse_single_bet, lines))
 
 
-def hand_type(hand: HandType) -> int:
+def hand_type(hand: HandType) -> tuple[int, list[int]]:
     if len(hand) != 5:
         raise ValueError("Invalid hand")
 
     counts = Counter(hand).most_common()
 
-    number_of_most_common = counts[0][1]
+    occurrences = sorted((count for _, count in counts), reverse=True)
     number_of_unique_cards = len(counts)
 
-    if number_of_unique_cards == 1:
-        # five of a kind
-        return 6
-    elif number_of_unique_cards == 2:
-        if number_of_most_common == 4:
-            # four of a kind
-            return 5
-        elif number_of_most_common == 3:
-            # full house
-            return 4
-        else:
-            raise ValueError("Invalid hand")
-    elif number_of_unique_cards == 3:
-        if number_of_most_common == 3:
-            # three of a kind
-            return 3
-        elif number_of_most_common == 2:
-            # two pairs
-            return 2
-        else:
-            raise ValueError("Invalid hand")
-    elif number_of_unique_cards == 4:
-        # one pair
-        return 1
-    elif number_of_unique_cards == 5:
-        # high card
-        return 0
-
-    raise ValueError("Invalid hand")
+    return -number_of_unique_cards, occurrences
 
 
 def key(hand: HandType) -> tuple[int, HandType]:
