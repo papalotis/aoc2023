@@ -4,9 +4,11 @@ from pathlib import Path
 
 HandType = tuple[int, int, int, int, int]
 
+JOKER_VALUE = 1
+
 
 def kind_to_int(kind: str) -> int:
-    mapper = {"A": 14, "K": 13, "Q": 12, "J": 1, "T": 10}
+    mapper = {"A": 14, "K": 13, "Q": 12, "J": JOKER_VALUE, "T": 10}
 
     return int(mapper.get(kind, kind))
 
@@ -28,41 +30,43 @@ def parse(data: str) -> list[tuple[HandType, int]]:
     return list(map(parse_single_bet, lines))
 
 
-def hand_type(hand: HandType) -> tuple[int, list[int]]:
+def hand_key(
+    hand: HandType, value_to_replace_jokers_with: int
+) -> tuple[int, list[int], HandType]:
     if len(hand) != 5:
         raise ValueError("Invalid hand")
 
-    counts = Counter(hand).most_common()
+    hand_with_jokers_replaced = replace_joker_with_value(
+        hand, value_to_replace_jokers_with
+    )
+
+    counts = Counter(hand_with_jokers_replaced).most_common()
 
     occurrences = sorted((count for _, count in counts), reverse=True)
-    number_of_unique_cards = len(counts)
 
-    return -number_of_unique_cards, occurrences
+    # the less unique cards, the better
+    # if the number of unique cards is the same, the more occurrences of the most common card, the better
+    # finally sort by the hand itself
+    return -len(occurrences), occurrences, hand
 
 
 def replace_joker_with_value(hand: HandType, value: int) -> HandType:
-    return tuple(value if card == 1 else card for card in hand)
+    return tuple(value if card == JOKER_VALUE else card for card in hand)
 
 
-def best_hand_type(hand: HandType) -> int:
+def best_hand_key(hand: HandType) -> tuple[int, list[int], HandType]:
     if len(hand) != 5:
         raise ValueError("Invalid hand")
 
-    valid_values = set(range(2, 15)) - {1}
+    valid_values = set(range(2, 15)) - {JOKER_VALUE}
 
-    return max(
-        hand_type(replace_joker_with_value(hand, value)) for value in valid_values
-    )
-
-
-def key(hand: HandType) -> tuple[int, HandType]:
-    return (best_hand_type(hand), hand)
+    return max(hand_key(hand, value) for value in valid_values)
 
 
 def main(fname: str) -> None:
     data = Path(fname).read_text()
 
-    bets = sorted(parse(data), key=lambda x: key(x[0]))
+    bets = sorted(parse(data), key=lambda x: best_hand_key(x[0]))
 
     print(sum(i * bid for i, (_, bid) in enumerate(bets, start=1)))
 

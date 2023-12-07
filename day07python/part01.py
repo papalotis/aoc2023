@@ -28,26 +28,24 @@ def parse(data: str) -> list[tuple[HandType, int]]:
     return list(map(parse_single_bet, lines))
 
 
-def hand_type(hand: HandType) -> tuple[int, list[int]]:
+def hand_type_key(hand: HandType) -> tuple[int, list[int], HandType]:
     if len(hand) != 5:
         raise ValueError("Invalid hand")
 
     counts = Counter(hand).most_common()
 
     occurrences = sorted((count for _, count in counts), reverse=True)
-    number_of_unique_cards = len(counts)
 
-    return -number_of_unique_cards, occurrences
-
-
-def key(hand: HandType) -> tuple[int, HandType]:
-    return (hand_type(hand), hand)
+    # the less unique cards, the better
+    # if the number of unique cards is the same, the more occurrences of the most common card, the better
+    # finally sort by the hand itself
+    return -len(occurrences), occurrences, hand
 
 
 def main(fname: str) -> None:
     data = Path(fname).read_text()
 
-    bets = sorted(parse(data), key=lambda x: key(x[0]))
+    bets = sorted(parse(data), key=lambda x: hand_type_key(x[0]))
 
     print(sum(i * bid for i, (_, bid) in enumerate(bets, start=1)))
 
