@@ -1,7 +1,9 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 from numpy.typing import NDArray
+
 
 def parse_data(data: str) -> NDArray[np.int64]:
     times_str, distances_str = data.splitlines()
@@ -14,8 +16,8 @@ def parse_data(data: str) -> NDArray[np.int64]:
 
     return np.column_stack((times, distances))
 
-def solve(data_array: NDArray[np.int64]) -> int:
 
+def solve(data_array: NDArray[np.int64]) -> int:
     times = data_array[:, 0]
     max_times = np.max(times)
 
@@ -39,7 +41,6 @@ def main(fname: str) -> None:
     data_array = parse_data(data)
 
     print(solve(data_array))
-
 
 
 if __name__ == "__main__":

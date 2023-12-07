@@ -1,12 +1,12 @@
-from itertools import count
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from itertools import count
 from pathlib import Path
 from typing import NoReturn
-from typing_extensions import Self
 
 from tqdm import tqdm
+from typing_extensions import Self
 
 
 class Map(Mapping[int, int]):
@@ -45,7 +45,8 @@ class Map(Mapping[int, int]):
 
     def __len__(self) -> NoReturn:
         raise NotImplementedError("This mapping does not support len")
-    
+
+
 class BackwardsMap(Map):
     def __getitem__(self, key: int) -> int:
         for source_range, destination_range in zip(
@@ -79,7 +80,6 @@ class Solution:
 
         return cls(maps, seeds)
 
-
     def find_best_location(self) -> int:
         found_location = None
 
@@ -92,11 +92,12 @@ class Solution:
             for seed_range in self.seeds_ranges:
                 if seed in seed_range:
                     found_location = orig_location
-                    
+
             if found_location is not None:
                 break
-                    
+
         return found_location
+
 
 def main(fname: str) -> None:
     data = Path(fname).read_text()

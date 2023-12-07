@@ -1,20 +1,20 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 from numpy.typing import NDArray
+
 
 def parse_data(data: str) -> NDArray[np.int64]:
     times_str, distances_str = data.splitlines()
 
-    times = int(''.join(filter(str.isdigit, times_str)))
-    distances = int(''.join(filter(str.isdigit, distances_str)))
+    times = int("".join(filter(str.isdigit, times_str)))
+    distances = int("".join(filter(str.isdigit, distances_str)))
 
     return np.array([[times, distances]])
 
 
-
 def solve(data_array: NDArray[np.int64]) -> int:
-
     times = data_array[:, 0]
     max_times = np.max(times)
 
@@ -38,7 +38,6 @@ def main(fname: str) -> None:
     data_array = parse_data(data)
 
     print(solve(data_array))
-
 
 
 if __name__ == "__main__":
