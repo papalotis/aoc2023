@@ -68,7 +68,7 @@ def hand_type(hand: HandType) -> int:
     raise ValueError("Invalid hand")
 
 
-def replace_jocker_with_value(hand: HandType, value: int) -> HandType:
+def replace_joker_with_value(hand: HandType, value: int) -> HandType:
     return tuple(value if card == 1 else card for card in hand)
 
 
@@ -79,7 +79,7 @@ def best_hand_type(hand: HandType) -> int:
     valid_values = set(range(2, 15)) - {1}
 
     return max(
-        hand_type(replace_jocker_with_value(hand, value)) for value in valid_values
+        hand_type(replace_joker_with_value(hand, value)) for value in valid_values
     )
 
 
