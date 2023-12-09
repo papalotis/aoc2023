@@ -15,20 +15,16 @@ def parse(data: str) -> list[IntArray]:
 
 
 def solve_one(data: IntArray) -> int:
-    values = []
-    while np.any(data != 0):
-        values.append(data[0])
-        data = np.diff(data)
-
     result = 0
-    for value in values[::-1]:
-        result = value - result
+    while np.any(data != 0):
+        result += data[-1]
+        data = np.diff(data)
 
     return result
 
 
 def solve(data: list[IntArray]) -> int:
-    return sum(solve_one(line) for line in data)
+    return sum(solve_one(line[::-1]) for line in data)
 
 
 def main(fname: str) -> None:
